@@ -16,6 +16,8 @@ KinectPV2 kinect;
 String[] organoName = {"higado.png", "estomago.png", "pancreas.png", "intestinoDelgado.png", "intestinoGrueso.png"};
 PImage[] organo = new PImage[organoName.length];
 
+PShape org3D;
+
 void setup() {
   size(1920, 1080, P3D);
 
@@ -29,11 +31,14 @@ void setup() {
   for (int i=0; i<organoName.length; i++) {
     organo[i] = loadImage(organoName[i]);
   }
+
+  org3D = loadShape("esfera.obj");
+  ambientLight(102, 102, 102);
 }
 
 void draw() {
   //background(0);
-
+  lights();
   image(kinect.getColorImage(), 0, 0, width, height);
 
 
@@ -64,10 +69,9 @@ void draw() {
       for (int j=0; j<organo.length; j++) {
         if (joints[KinectPV2.JointType_HandRight].getState() == KinectPV2.HandState_Closed) {
           organo[j].filter(INVERT);
-          image(organo[j], joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), tamaX, tamaY);
-        } else {
-          image(organo[j], joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), tamaX, tamaY);
-        }
+        } 
+        shape(org3D, joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY()-tamaY/2, tamaX, tamaY);
+        image(organo[j], joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY()-tamaY/2, tamaX, tamaY);
       }
       popStyle();
 
