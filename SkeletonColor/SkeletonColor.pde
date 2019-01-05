@@ -13,8 +13,8 @@ import KinectPV2.*;
 
 KinectPV2 kinect;
 
-PImage organo;
-
+String[] organoName = {"higado.png", "estomago.png", "pancreas.png", "intestinoDelgado.png", "intestinoGrueso.png"};
+PImage[] organo = new PImage[organoName.length];
 
 void setup() {
   size(1920, 1080, P3D);
@@ -26,11 +26,13 @@ void setup() {
 
   kinect.init();
 
-  organo = loadImage("higado.png");
+  for (int i=0; i<organoName.length; i++) {
+    organo[i] = loadImage(organoName[i]);
+  }
 }
 
 void draw() {
-  background(0);
+  //background(0);
 
   image(kinect.getColorImage(), 0, 0, width, height);
 
@@ -43,14 +45,27 @@ void draw() {
     if (skeleton.isTracked()) {
 
       KJoint[] joints = skeleton.getJoints();
-      
+
+      float dist;
+      PVector p1 = new PVector(joints[KinectPV2.JointType_SpineShoulder].getX(), joints[KinectPV2.JointType_SpineShoulder].getY());
+      PVector p2 = new PVector(joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY());
+
+      int tamaX, tamaY;
+
       pushStyle();
-      
-      text(joints[KinectPV2.JointType_SpineMid].getX(), 200, 200);
+
+      dist = PVector.dist(p1, p2);
+
+      tamaX = int(dist/1.8);
+      tamaY = int(dist/1.8);
+
+      text(dist, 200, 200);
       imageMode(CENTER);
-      image(organo, joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), organo.width/2, organo.height/2);
-      
+      for (int j=0; j<organo.length; j++) {
+        image(organo[j], joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), tamaX, tamaY);
+      }
       popStyle();
+
       color col  = skeleton.getIndexColor();
       fill(col);
       stroke(col);
