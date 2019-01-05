@@ -62,7 +62,12 @@ void draw() {
       text(dist, 200, 200);
       imageMode(CENTER);
       for (int j=0; j<organo.length; j++) {
-        image(organo[j], joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), tamaX, tamaY);
+        if (joints[KinectPV2.JointType_HandRight].getState() == KinectPV2.HandState_Closed) {
+          organo[j].filter(INVERT);
+          image(organo[j], joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), tamaX, tamaY);
+        } else {
+          image(organo[j], joints[KinectPV2.JointType_SpineMid].getX(), joints[KinectPV2.JointType_SpineMid].getY(), tamaX, tamaY);
+        }
       }
       popStyle();
 
