@@ -1,2 +1,2 @@
-# colonIrritado
+# colon Irritado
 Interactividad cientifica didactica
