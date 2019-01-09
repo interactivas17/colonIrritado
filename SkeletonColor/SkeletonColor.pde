@@ -38,7 +38,7 @@ void setup() {
 
 void draw() {
   //background(0);
-  lights();
+  //lights();
   image(kinect.getColorImage(), 0, 0, width, height);
 
 
