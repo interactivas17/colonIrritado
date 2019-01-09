@@ -7,7 +7,8 @@ Thomas Sanchez Lengeling.
  Skeleton color map example.
  Skeleton (x,y) positions are mapped to match the color Frame
  */
-
+ 
+ 
 import KinectPV2.KJoint;
 import KinectPV2.*;
 
@@ -70,7 +71,7 @@ void draw() {
         if (joints[KinectPV2.JointType_HandRight].getState() == KinectPV2.HandState_Closed) {
           organo[j].filter(INVERT);
         } 
-        shape(org3D, joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY()-tamaY/2, tamaX, tamaY);
+        //shape(org3D, joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY()-tamaY/2, tamaX, tamaY);
         image(organo[j], joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY()-tamaY/2, tamaX, tamaY);
       }
       popStyle();

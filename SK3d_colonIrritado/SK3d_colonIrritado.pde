@@ -15,7 +15,16 @@ KinectPV2 kinect;
 
 
 float zVal = 500;
-float rotX = PI;
+//float rotX = PI;
+
+float rotX = radians(180);  // by default rotate the hole scene 180deg around the x-axis, 
+float zoomF = 700;
+
+// the data from openni comes upside down
+float rotY = radians(0);
+
+PShape org3D;
+
 
 void setup() {
   size(1024, 768, P3D);
@@ -28,6 +37,9 @@ void setup() {
   kinect.enableSkeleton3DMap(true);
 
   kinect.init();
+
+  org3D = loadShape("hepato.obj");
+  ambientLight(102, 102, 102);
 }
 
 void draw() {
@@ -38,8 +50,11 @@ void draw() {
   //translate the scene to the center 
   pushMatrix();
   translate(width/2, height/2, 0);
-  scale(zVal);
+  //scale(zVal);
   rotateX(rotX);
+  rotateY(rotY);
+  scale(zoomF);
+
 
   ArrayList<KSkeleton> skeletonArray =  kinect.getSkeleton3d();
 
@@ -158,16 +173,23 @@ void drawBody(KJoint[] joints) {
 }
 
 void drawJoint(KJoint[] joints, int jointType) {
+   //int tamaX, tamaY;
   //strokeWeight(0.05f);
-  //strokeWeight(2.0f + joints[jointType].getZ()*8);
+  ////strokeWeight(2.0f + joints[jointType].getZ()*8);
   //point(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
+  //translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
+  //sphere(100);
 
-  /*
+     
   pushMatrix();
-   translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
-   ellipse(0, 0, 25, 25);
-   popMatrix();
-   */
+  noStroke();
+  lights();
+  translate(joints[jointType].getX(), joints[jointType].getY(), joints[jointType].getZ());
+  //sphere(0.05);
+  scale(0.005);
+  shape(org3D);//, joints[KinectPV2.JointType_SpineBase].getX(), joints[KinectPV2.JointType_SpineBase].getY(), joints[jointType].getZ()/10, joints[jointType].getZ()/10);
+  //ellipse(0, 0, 0.005, 0.005);
+  popMatrix();
 }
 
 void drawBone(KJoint[] joints, int jointType1, int jointType2) {
@@ -186,7 +208,7 @@ void drawBone(KJoint[] joints, int jointType1, int jointType2) {
 
 void drawHandState(KJoint joint) {
   handState(joint.getState());
-  strokeWeight(0.005f);
+  strokeWeight(0.05f);
   point(joint.getX(), joint.getY(), joint.getZ());
 }
 
@@ -203,6 +225,35 @@ void handState(int handState) {
     break;
   case KinectPV2.HandState_NotTracked:
     stroke(100, 100, 100);
+    break;
+  }
+}
+
+void keyPressed()
+{
+  switch(keyCode)
+  {
+  case LEFT:
+    rotY += 0.1f;
+    break;
+  case RIGHT:
+    // zoom out
+    rotY -= 0.1f;
+    break;
+  case UP:
+    if (keyEvent.isShiftDown())
+      zoomF += 0.02f;
+    else
+      rotX += 0.1f;
+    break;
+  case DOWN:
+    if (keyEvent.isShiftDown())
+    {
+      zoomF -= 0.02f;
+      if (zoomF < 0.01)
+        zoomF = 0.01;
+    } else
+      rotX -= 0.1f;
     break;
   }
 }
